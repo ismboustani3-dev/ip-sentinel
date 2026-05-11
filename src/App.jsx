@@ -10,7 +10,20 @@ const App = () => {
   const [bulkResults, setBulkResults] = useState([]);
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState('single'); // 'single' or 'bulk'
+  const [mode, setMode] = useState('single');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (loginData.username === 'admin' && loginData.password === 'sentinel2026') {
+      setIsAuthenticated(true);
+      setLoginError('');
+    } else {
+      setLoginError('Invalid credentials. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('ip_history');
@@ -67,6 +80,65 @@ const App = () => {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div className="bg-blobs">
+          <div className="blob blob-1"></div>
+          <div className="blob blob-2"></div>
+        </div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card" 
+          style={{ width: '100%', maxWidth: '400px', textAlign: 'center' }}
+        >
+          <div style={{ marginBottom: '2rem' }}>
+            <div className="glass-card" style={{ display: 'inline-flex', padding: '1rem', borderRadius: '16px', marginBottom: '1.5rem' }}>
+              <Shield size={32} color="var(--primary-color)" />
+            </div>
+            <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Secure Access</h2>
+            <p style={{ color: 'var(--text-secondary)' }}>Enter credentials to access IP Sentinel</p>
+          </div>
+
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ textAlign: 'left' }}>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Username</label>
+              <input 
+                type="text" 
+                className="input-field" 
+                placeholder="admin"
+                value={loginData.username}
+                onChange={(e) => setLoginData({...loginData, username: e.target.value})}
+              />
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Password</label>
+              <input 
+                type="password" 
+                className="input-field" 
+                placeholder="••••••••"
+                value={loginData.password}
+                onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+              />
+            </div>
+            
+            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.85rem' }}>{loginError}</p>}
+            
+            <button type="submit" className="glow-button" style={{ marginTop: '1rem' }}>
+              Authorize System
+            </button>
+          </form>
+          
+          <div style={{ marginTop: '2rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.2)' }}>
+            ENCRYPTED SESSION ACTIVE
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="app-container">
       <div className="bg-blobs">
@@ -83,8 +155,16 @@ const App = () => {
             IP <span style={{ color: 'var(--primary-color)' }}>SENTINEL</span>
           </h1>
         </div>
-        <div className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Activity size={14} /> System Online
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Activity size={14} /> System Online
+          </div>
+          <button 
+            onClick={() => setIsAuthenticated(false)}
+            style={{ background: 'transparent', border: '1px solid var(--surface-border)', color: 'var(--text-secondary)', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}
+          >
+            Logout
+          </button>
         </div>
       </nav>
 
