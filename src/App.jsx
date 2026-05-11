@@ -99,23 +99,23 @@ const App = () => {
             <div className="glass-card" style={{ display: 'inline-flex', padding: '1rem', borderRadius: '16px', marginBottom: '1.5rem' }}>
               <Shield size={32} color="var(--primary-color)" />
             </div>
-            <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Secure Access</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Enter credentials to access IP Sentinel</p>
+            <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', letterSpacing: '4px' }}>ACCESS<span style={{ color: 'var(--primary-color)' }}>KEY</span></h2>
+            <p style={{ color: 'var(--text-secondary)', letterSpacing: '2px', fontSize: '0.75rem', textTransform: 'uppercase' }}>Encrypted Terminal Uplink</p>
           </div>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ textAlign: 'left' }}>
-              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Username</label>
+              <label style={{ fontSize: '0.7rem', color: 'var(--primary-color)', marginBottom: '0.5rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>System Identifier</label>
               <input 
                 type="text" 
                 className="input-field" 
-                placeholder="admin"
+                placeholder="USER_ID"
                 value={loginData.username}
                 onChange={(e) => setLoginData({...loginData, username: e.target.value})}
               />
             </div>
             <div style={{ textAlign: 'left' }}>
-              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Password</label>
+              <label style={{ fontSize: '0.7rem', color: 'var(--primary-color)', marginBottom: '0.5rem', display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>Security Cipher</label>
               <input 
                 type="password" 
                 className="input-field" 
@@ -125,10 +125,10 @@ const App = () => {
               />
             </div>
             
-            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.85rem' }}>{loginError}</p>}
+            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase' }}>[ACCESS_DENIED]: {loginError}</p>}
             
             <button type="submit" className="glow-button" style={{ marginTop: '1rem' }}>
-              Authorize System
+              Initialize Uplink
             </button>
           </form>
           
@@ -157,37 +157,49 @@ const App = () => {
           </h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 0 10px rgba(0, 255, 157, 0.2)' }}>
             <Activity size={14} /> System Online
           </div>
           <button 
             onClick={() => setIsAuthenticated(false)}
-            style={{ background: 'transparent', border: '1px solid var(--surface-border)', color: 'var(--text-secondary)', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}
+            style={{ 
+              background: 'rgba(255, 0, 122, 0.1)', 
+              border: '1px solid rgba(255, 0, 122, 0.2)', 
+              color: 'var(--secondary-color)', 
+              padding: '0.4rem 1rem', 
+              borderRadius: '4px', 
+              cursor: 'pointer', 
+              fontSize: '0.75rem',
+              fontWeight: '700',
+              textTransform: 'uppercase'
+            }}
           >
-            Logout
+            Terminal Disconnect
           </button>
         </div>
       </nav>
 
       <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem' }}>
-        <header style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <header style={{ textAlign: 'center', marginBottom: '4rem', position: 'relative' }}>
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: '100px' }}
+            style={{ height: '2px', background: 'var(--primary-color)', margin: '0 auto 1.5rem', boxShadow: '0 0 10px var(--primary-color)' }}
+          />
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ fontSize: '3rem', marginBottom: '1rem', fontWeight: '800' }}
+            initial={{ opacity: 0, letterSpacing: '10px' }}
+            animate={{ opacity: 1, letterSpacing: '2px' }}
+            style={{ fontSize: '3.5rem', marginBottom: '1rem', fontWeight: '800' }}
           >
-            Network Intelligence <br /> 
-            <span style={{ background: 'linear-gradient(to right, var(--primary-color), var(--secondary-color))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              At Your Fingertips
-            </span>
+            NET<span style={{ color: 'var(--primary-color)' }}>INTEL</span> PROTOCOL
           </motion.h2>
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            style={{ color: 'var(--text-secondary)', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '3px' }}
           >
-            Check IP addresses against blacklists, providers, and geolocation data.
+            Global IP Reputation & Provider Analytics
           </motion.p>
         </header>
 
@@ -196,24 +208,24 @@ const App = () => {
             <button 
               onClick={() => setMode('single')}
               style={{ 
-                background: mode === 'single' ? 'var(--primary-color)' : 'transparent',
-                color: mode === 'single' ? 'black' : 'white',
+                background: mode === 'single' ? 'rgba(0, 242, 255, 0.1)' : 'transparent',
+                color: mode === 'single' ? 'var(--primary-color)' : 'var(--text-secondary)',
                 border: `1px solid ${mode === 'single' ? 'var(--primary-color)' : 'var(--surface-border)'}`,
-                padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600'
+                padding: '0.6rem 1.2rem', borderRadius: '4px', cursor: 'pointer', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px'
               }}
             >
-              Single IP
+              Access Port
             </button>
             <button 
               onClick={() => setMode('bulk')}
               style={{ 
-                background: mode === 'bulk' ? 'var(--primary-color)' : 'transparent',
-                color: mode === 'bulk' ? 'black' : 'white',
+                background: mode === 'bulk' ? 'rgba(0, 242, 255, 0.1)' : 'transparent',
+                color: mode === 'bulk' ? 'var(--primary-color)' : 'var(--text-secondary)',
                 border: `1px solid ${mode === 'bulk' ? 'var(--primary-color)' : 'var(--surface-border)'}`,
-                padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600'
+                padding: '0.6rem 1.2rem', borderRadius: '4px', cursor: 'pointer', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px'
               }}
             >
-              Bulk Lookup
+              Matrix Scan
             </button>
           </div>
           
