@@ -11,6 +11,7 @@ const App = () => {
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
   const [mode, setMode] = useState('single');
+  const [showStats, setShowStats] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
@@ -227,6 +228,17 @@ const App = () => {
             >
               Matrix Scan
             </button>
+            <button 
+              onClick={() => setShowStats(!showStats)}
+              style={{ 
+                background: showStats ? 'rgba(0, 255, 157, 0.1)' : 'transparent',
+                color: showStats ? 'var(--success-color)' : 'var(--text-secondary)',
+                border: `1px solid ${showStats ? 'var(--success-color)' : 'var(--surface-border)'}`,
+                padding: '0.6rem 1.2rem', borderRadius: '4px', cursor: 'pointer', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', marginLeft: 'auto'
+              }}
+            >
+              {showStats ? 'Close Intel' : 'Network Stats'}
+            </button>
           </div>
           
           <div style={{ display: 'flex', gap: '1rem' }}>
@@ -258,7 +270,39 @@ const App = () => {
           </div>
         </section>
 
-        {error && (
+        {showStats && history.length > 0 && (
+          <motion.section 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="glass-card" 
+            style={{ marginBottom: '2rem', padding: '1.5rem' }}
+          >
+            <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Activity size={20} color="var(--success-color)" />
+              Protocol Statistics
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+              <StatItem label="Total Scans" value={history.length} color="var(--primary-color)" />
+              <StatItem label="Unique Countries" value={new Set(history.map(h => h.countryCode)).size} color="var(--secondary-color)" />
+              <StatItem label="Top Provider" value={getTopItem(history, 'isp')} color="var(--success-color)" />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+              <div>
+                <h4 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem', textTransform: 'uppercase' }}>Provider Distribution</h4>
+                {getDistribution(history, 'isp').map((d, i) => (
+                  <ProgressBar key={i} label={d.name} percent={d.percent} />
+                ))}
+              </div>
+              <div>
+                <h4 style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem', textTransform: 'uppercase' }}>Country Analytics</h4>
+                {getDistribution(history, 'country').map((d, i) => (
+                  <ProgressBar key={i} label={d.name} percent={d.percent} />
+                ))}
+              </div>
+            </div>
+          </motion.section>
+        )}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -425,5 +469,50 @@ const DetailItem = ({ label, value }) => (
     <span style={{ fontWeight: '500', textAlign: 'right', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</span>
   </div>
 );
+
+const StatItem = ({ label, value, color }) => (
+  <div className="glass-card" style={{ padding: '1rem', textAlign: 'center', borderTop: `2px solid ${color}` }}>
+    <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{label}</p>
+    <p style={{ fontSize: '1.25rem', fontWeight: '800', color: color }}>{value}</p>
+  </div>
+);
+
+const ProgressBar = ({ label, percent }) => (
+  <div style={{ marginBottom: '1rem' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.75rem' }}>
+      <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>{label}</span>
+      <span style={{ color: 'var(--text-secondary)' }}>{percent}%</span>
+    </div>
+    <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+      <motion.div 
+        initial={{ width: 0 }}
+        animate={{ width: `${percent}%` }}
+        style={{ height: '100%', background: 'var(--primary-color)', boxShadow: '0 0 10px var(--primary-color)' }}
+      />
+    </div>
+  </div>
+);
+
+const getTopItem = (history, key) => {
+  if (!history.length) return '-';
+  const counts = history.reduce((acc, h) => {
+    acc[h[key]] = (acc[h[key]] || 0) + 1;
+    return acc;
+  }, {});
+  return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+};
+
+const getDistribution = (history, key) => {
+  if (!history.length) return [];
+  const counts = history.reduce((acc, h) => {
+    acc[h[key]] = (acc[h[key]] || 0) + 1;
+    return acc;
+  }, {});
+  const total = history.length;
+  return Object.entries(counts)
+    .map(([name, count]) => ({ name, percent: Math.round((count / total) * 100) }))
+    .sort((a, b) => b.percent - a.percent)
+    .slice(0, 5);
+};
 
 export default App;
