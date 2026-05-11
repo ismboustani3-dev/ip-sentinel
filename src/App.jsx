@@ -17,20 +17,29 @@ const App = () => {
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
 
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('ip_history');
+    if (savedHistory) setHistory(JSON.parse(savedHistory));
+    
+    const savedAuth = localStorage.getItem('is_authenticated');
+    if (savedAuth === 'true') setIsAuthenticated(true);
+  }, []);
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (loginData.username === 'admin' && loginData.password === 'sentinel2026') {
       setIsAuthenticated(true);
+      localStorage.setItem('is_authenticated', 'true');
       setLoginError('');
     } else {
       setLoginError('Invalid credentials. Please try again.');
     }
   };
 
-  useEffect(() => {
-    const savedHistory = localStorage.getItem('ip_history');
-    if (savedHistory) setHistory(JSON.parse(savedHistory));
-  }, []);
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('is_authenticated');
+  };
 
   const saveToHistory = (data) => {
     const newHistory = [data, ...history.filter(h => h.query !== data.query)].slice(0, 10);
@@ -162,7 +171,7 @@ const App = () => {
             <Activity size={14} /> System Online
           </div>
           <button 
-            onClick={() => setIsAuthenticated(false)}
+            onClick={handleLogout}
             style={{ 
               background: 'rgba(255, 0, 122, 0.1)', 
               border: '1px solid rgba(255, 0, 122, 0.2)', 
