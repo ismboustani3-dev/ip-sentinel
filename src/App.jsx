@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Globe, Shield, Activity, History, Server, MapPin, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
+import { Search, Globe, Shield, Activity, History, Server, MapPin, AlertTriangle, CheckCircle2, XCircle, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Map from './components/Map';
 
@@ -42,9 +42,20 @@ const App = () => {
   };
 
   const saveToHistory = (data) => {
-    const newHistory = [data, ...history.filter(h => h.query !== data.query)].slice(0, 10);
+    const newHistory = [data, ...history.filter(h => h.query !== data.query)].slice(0, 50);
     setHistory(newHistory);
     localStorage.setItem('ip_history', JSON.stringify(newHistory));
+  };
+
+  const deleteFromHistory = (ip) => {
+    const newHistory = history.filter(h => h.query !== ip);
+    setHistory(newHistory);
+    localStorage.setItem('ip_history', JSON.stringify(newHistory));
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem('ip_history');
   };
 
   const checkIp = async (ip = ipInput) => {
@@ -422,18 +433,29 @@ const App = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <History color="var(--text-secondary)" />
-                <h3 style={{ fontSize: '1.25rem' }}>Recent Scans</h3>
+                <h3 style={{ fontSize: '1.25rem' }}>Protocol Historique</h3>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                  {history.length} / 50
+                </span>
               </div>
-              <div style={{ position: 'relative', width: '250px' }}>
-                <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-                <input 
-                  type="text" 
-                  className="input-field" 
-                  placeholder="Search history..." 
-                  style={{ padding: '0.5rem 0.5rem 0.5rem 2.5rem', fontSize: '0.85rem' }}
-                  value={historySearch}
-                  onChange={(e) => setHistorySearch(e.target.value)}
-                />
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <button 
+                  onClick={clearHistory}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--error-color)', fontSize: '0.75rem', cursor: 'pointer', fontWeight: '600', textTransform: 'uppercase' }}
+                >
+                  Clear Archive
+                </button>
+                <div style={{ position: 'relative', width: '250px' }}>
+                  <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                  <input 
+                    type="text" 
+                    className="input-field" 
+                    placeholder="Search logs..." 
+                    style={{ padding: '0.5rem 0.5rem 0.5rem 2.5rem', fontSize: '0.85rem' }}
+                    value={historySearch}
+                    onChange={(e) => setHistorySearch(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -449,15 +471,24 @@ const App = () => {
                   whileHover={{ x: 5 }}
                   className="glass-card" 
                   style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-                  onClick={() => { setResults(item); setIpInput(item.query); }}
                 >
-                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                    <span style={{ fontWeight: '600', color: 'var(--primary-color)', minWidth: '120px' }}>{item.query}</span>
+                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }} onClick={() => { setResults(item); setIpInput(item.query); }}>
+                    <span style={{ fontWeight: '600', color: 'var(--primary-color)', minWidth: '120px', fontFamily: 'monospace' }}>{item.query}</span>
                     <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{item.isp}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{item.countryCode}</span>
-                    <Globe size={16} color="var(--text-secondary)" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <p style={{ fontSize: '0.8rem', fontWeight: '600' }}>{item.city}</p>
+                      <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{item.countryCode}</p>
+                    </div>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); deleteFromHistory(item.query); }}
+                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.1)', cursor: 'pointer', padding: '0.5rem' }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--error-color)'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.1)'}
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </motion.div>
               ))}
