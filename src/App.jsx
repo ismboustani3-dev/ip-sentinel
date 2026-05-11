@@ -391,32 +391,46 @@ const App = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="glass-card"
+              style={{ padding: '0' }}
             >
-              <h3 style={{ marginBottom: '1.5rem' }}>Bulk Results</h3>
+              <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--surface-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontSize: '1rem', letterSpacing: '2px' }}>Bulk Intelligence Matrix</h3>
+                <span className="badge badge-success" style={{ fontSize: '0.6rem' }}>{bulkResults.length} Nodes Identified</span>
+              </div>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
                   <thead>
-                    <tr style={{ borderBottom: '1px solid var(--surface-border)', color: 'var(--text-secondary)' }}>
+                    <tr style={{ background: 'rgba(0,0,0,0.4)', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>
                       <th style={{ padding: '1rem' }}>IP Address</th>
-                      <th style={{ padding: '1rem' }}>ISP</th>
-                      <th style={{ padding: '1rem' }}>Location</th>
                       <th style={{ padding: '1rem' }}>Status</th>
+                      <th style={{ padding: '1rem' }}>ISP</th>
+                      <th style={{ padding: '1rem' }}>Organization</th>
+                      <th style={{ padding: '1rem' }}>ASN</th>
+                      <th style={{ padding: '1rem' }}>Country</th>
+                      <th style={{ padding: '1rem' }}>Region</th>
+                      <th style={{ padding: '1rem' }}>City</th>
+                      <th style={{ padding: '1rem' }}>Message</th>
                     </tr>
                   </thead>
                   <tbody>
                     {bulkResults.map((res, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
-                        <td style={{ padding: '1rem', fontWeight: '600' }}>{res.query}</td>
-                        <td style={{ padding: '1rem' }}>{res.isp || '-'}</td>
-                        <td style={{ padding: '1rem' }}>{res.city ? `${res.city}, ${res.countryCode}` : '-'}</td>
+                      <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', verticalAlign: 'middle' }}>
+                        <td style={{ padding: '1rem', fontWeight: '700', color: 'var(--primary-color)', fontFamily: 'monospace' }}>{res.query}</td>
                         <td style={{ padding: '1rem' }}>
                           {res.error ? (
-                            <span className="badge badge-error">Error</span>
-                          ) : res.reputation?.is_blacklisted ? (
-                            <span className="badge badge-error">Blacklisted</span>
+                            <span style={{ color: 'var(--error-color)' }}>Fail</span>
                           ) : (
-                            <span className="badge badge-success">Clean</span>
+                            <span style={{ color: 'var(--success-color)' }}>Success</span>
                           )}
+                        </td>
+                        <td style={{ padding: '1rem', whiteSpace: 'nowrap', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{res.isp || '-'}</td>
+                        <td style={{ padding: '1rem', whiteSpace: 'nowrap', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{res.org || '-'}</td>
+                        <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{res.as || '-'}</td>
+                        <td style={{ padding: '1rem' }}>{res.countryCode || '-'}</td>
+                        <td style={{ padding: '1rem' }}>{res.regionName || '-'}</td>
+                        <td style={{ padding: '1rem' }}>{res.city || '-'}</td>
+                        <td style={{ padding: '1rem', color: res.error ? 'var(--error-color)' : 'var(--text-secondary)' }}>
+                          {res.error ? res.error : 'OK'}
                         </td>
                       </tr>
                     ))}
