@@ -11,6 +11,7 @@ const App = () => {
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
   const [mode, setMode] = useState('single');
+  const [historySearch, setHistorySearch] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
@@ -352,12 +353,31 @@ const App = () => {
         {/* History Section */}
         {history.length > 0 && (
           <section style={{ marginTop: '4rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              <History color="var(--text-secondary)" />
-              <h3 style={{ fontSize: '1.25rem' }}>Recent Scans</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <History color="var(--text-secondary)" />
+                <h3 style={{ fontSize: '1.25rem' }}>Recent Scans</h3>
+              </div>
+              <div style={{ position: 'relative', width: '250px' }}>
+                <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  placeholder="Search history..." 
+                  style={{ padding: '0.5rem 0.5rem 0.5rem 2.5rem', fontSize: '0.85rem' }}
+                  value={historySearch}
+                  onChange={(e) => setHistorySearch(e.target.value)}
+                />
+              </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {history.map((item, idx) => (
+              {history
+                .filter(item => 
+                  item.query.toLowerCase().includes(historySearch.toLowerCase()) || 
+                  item.isp.toLowerCase().includes(historySearch.toLowerCase()) ||
+                  item.country.toLowerCase().includes(historySearch.toLowerCase())
+                )
+                .map((item, idx) => (
                 <motion.div 
                   key={idx}
                   whileHover={{ x: 5 }}
