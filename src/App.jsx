@@ -122,7 +122,8 @@ const App = () => {
               <h1 style={{ fontSize: '1.25rem', fontWeight: '700' }}>WMN3</h1>
             </div>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Sign In</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Enter your credentials to access WMN3 Intelligence.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Access the WMN3 Intelligence Platform.</p>
+            <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.2)', marginTop: '0.5rem' }}>developed By Ismail</p>
           </div>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -200,17 +201,17 @@ const App = () => {
           <motion.h2 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ fontSize: '2.5rem', marginBottom: '1rem', fontWeight: '800' }}
+            style={{ fontSize: '2.5rem', marginBottom: '0.5rem', fontWeight: '800' }}
           >
-            Network Intelligence
+            WMN3
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}
+            style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}
           >
-            Comprehensive IP analytics and infrastructure registry for professional security teams.
+            developed By Ismail
           </motion.p>
         </header>
 
@@ -502,7 +503,8 @@ const App = () => {
       </main>
 
       <footer style={{ textAlign: 'center', padding: '4rem 2rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-        &copy; 2026 WMN3. Powered by <a href="http://ip-api.com" target="_blank" style={{ color: 'var(--primary-color)', textDecoration: 'none' }}>ip-api.com</a>
+        <p style={{ marginBottom: '0.5rem' }}>&copy; 2026 WMN3</p>
+        <p style={{ fontSize: '0.75rem', opacity: 0.5 }}>developed By Ismail</p>
       </footer>
     </div>
   );
