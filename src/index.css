@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --bg-color: #030303;
-  --surface-color: #0d0d0d;
-  --surface-card: #141414;
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --primary-color: #ffffff;
-  --accent-color: #6366f1;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1a1;
-  --success-color: #00ff9d;
-  --error-color: #ff4d4d;
-  --font-main: 'Plus Jakarta Sans', sans-serif;
-  --radius: 12px;
+  --bg-color: #f5f5f7;
+  --surface-color: #ffffff;
+  --surface-card: #ffffff;
+  --surface-border: #e5e5e7;
+  --primary-color: #000000;
+  --accent-color: #007aff;
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --success-color: #34c759;
+  --error-color: #ff3b30;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius: 16px;
 }
 
 * {
@@ -27,140 +27,102 @@ body {
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
-  overflow-x: hidden;
 }
-
-/* Texture Overlay */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.03;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* Ambient Glows */
-.ambient-glow {
-  position: fixed;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  z-index: -1;
-  filter: blur(80px);
-  pointer-events: none;
-}
-
-.glow-1 { top: -10vw; right: -10vw; }
-.glow-2 { bottom: -10vw; left: -10vw; background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%); }
 
 .glass-card {
   background: var(--surface-card);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
   padding: 2rem;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .input-field {
-  background: #000;
+  background: #fbfbfd;
   border: 1px solid var(--surface-border);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1rem 1.25rem;
-  color: white;
+  color: var(--text-primary);
   font-family: var(--font-main);
   width: 100%;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  font-size: 1rem;
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #444;
-  background: #050505;
+  border-color: var(--accent-color);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
 }
 
 .glow-button {
   background: var(--primary-color);
-  color: #000;
+  color: #fff;
   border: none;
   padding: 1rem 2rem;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s ease;
 }
 
 .glow-button:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  opacity: 0.8;
+  transform: scale(1.01);
 }
 
-.glow-button::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: 0.5s;
-}
-
-.glow-button:hover::after {
-  left: 100%;
+.glow-button:active {
+  transform: scale(0.98);
 }
 
 .badge {
   padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
-.badge-success { background: rgba(0, 255, 157, 0.08); color: var(--success-color); border: 1px solid rgba(0, 255, 157, 0.1); }
-.badge-error { background: rgba(255, 77, 77, 0.08); color: var(--error-color); border: 1px solid rgba(255, 77, 77, 0.1); }
+.badge-success { background: rgba(52, 199, 89, 0.1); color: var(--success-color); }
+.badge-error { background: rgba(255, 59, 48, 0.1); color: var(--error-color); }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #000;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #444;
+/* Navigation */
+nav {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 /* Map Styling */
 .leaflet-container {
   border-radius: var(--radius);
   border: 1px solid var(--surface-border);
-  filter: grayscale(1) invert(1) brightness(0.8) contrast(1.2);
+}
+
+.map-tiles {
+  /* Keep standard light tiles */
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d1d6;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c7c7cc;
 }

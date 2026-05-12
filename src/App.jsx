@@ -125,32 +125,24 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', position: 'relative' }}>
-        <div className="ambient-glow glow-1"></div>
-        <div className="ambient-glow glow-2"></div>
-        
+      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f5f5f7' }}>
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', damping: 20 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           className="glass-card" 
-          style={{ width: '100%', maxWidth: '420px', border: '1px solid var(--surface-border)', background: 'rgba(13, 13, 13, 0.8)', backdropFilter: 'blur(20px)' }}
+          style={{ width: '100%', maxWidth: '400px', textAlign: 'center' }}
         >
-          <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
-            <motion.div 
-              initial={{ rotate: -10 }}
-              animate={{ rotate: 0 }}
-              style={{ display: 'inline-flex', padding: '1rem', background: '#000', borderRadius: '16px', border: '1px solid var(--surface-border)', marginBottom: '1.5rem' }}
-            >
-              <Shield size={32} color="var(--primary-color)" />
-            </motion.div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '800', letterSpacing: '-0.04em', marginBottom: '0.5rem' }}>WMN3</h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Developed By Ismail</p>
+          <div style={{ marginBottom: '2.5rem' }}>
+            <div style={{ display: 'inline-flex', padding: '1rem', background: '#000', borderRadius: '14px', marginBottom: '1.5rem' }}>
+              <Shield size={28} color="#fff" />
+            </div>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: '800', letterSpacing: '-0.03em', color: '#1d1d1f' }}>WMN3</h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.4rem' }}>Developed By Ismail</p>
           </div>
 
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ textAlign: 'left' }}>
-              <label style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '0.6rem', display: 'block' }}>SYSTEM ACCESS KEY</label>
+              <label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#1d1d1f', marginBottom: '0.5rem', display: 'block' }}>Access Key</label>
               <input 
                 type="text" 
                 className="input-field" 
@@ -160,7 +152,7 @@ const App = () => {
               />
             </div>
             <div style={{ textAlign: 'left' }}>
-              <label style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '0.6rem', display: 'block' }}>SECURITY CIPHER</label>
+              <label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#1d1d1f', marginBottom: '0.5rem', display: 'block' }}>Password</label>
               <input 
                 type="password" 
                 className="input-field" 
@@ -170,10 +162,10 @@ const App = () => {
               />
             </div>
             
-            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.85rem', textAlign: 'center' }}>{loginError}</p>}
+            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.85rem' }}>{loginError}</p>}
             
             <button type="submit" className="glow-button" style={{ width: '100%', marginTop: '1rem' }}>
-              Authorize Entry
+              Sign In
             </button>
           </form>
         </motion.div>
@@ -182,29 +174,26 @@ const App = () => {
   }
 
   return (
-    <div className="app-container" style={{ position: 'relative' }}>
-      <div className="ambient-glow glow-1"></div>
-      <div className="ambient-glow glow-2"></div>
-      
+    <div className="app-container">
       <nav style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        padding: '1.5rem 2rem', 
+        padding: '1.25rem 2.5rem', 
         borderBottom: '1px solid var(--surface-border)',
-        backdropFilter: 'blur(20px)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        background: 'rgba(3, 3, 3, 0.7)'
+        background: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(20px)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px' }}>
-            <Shield size={20} color="#000" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ padding: '0.5rem', background: '#000', borderRadius: '10px' }}>
+            <Shield size={20} color="#fff" />
           </div>
-          <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.02em' }}>WMN3</h1>
-            <p style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: '600', textTransform: 'uppercase' }}>developed By Ismail</p>
+          <div style={{ lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: '1.1rem', fontWeight: '800', letterSpacing: '-0.02em', color: '#1d1d1f' }}>WMN3</h1>
+            <span style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', fontWeight: '700', textTransform: 'uppercase' }}>developed By Ismail</span>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
@@ -252,10 +241,10 @@ const App = () => {
             <button 
               onClick={() => setMode('single')}
               style={{ 
-                background: mode === 'single' ? '#1f1f1f' : 'transparent',
-                color: mode === 'single' ? 'var(--text-primary)' : 'var(--text-secondary)',
+                background: mode === 'single' ? '#000' : 'transparent',
+                color: mode === 'single' ? '#fff' : 'var(--text-secondary)',
                 border: '1px solid var(--surface-border)',
-                padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '500'
+                padding: '0.5rem 1.25rem', borderRadius: '10px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'
               }}
             >
               Single IP
@@ -263,10 +252,10 @@ const App = () => {
             <button 
               onClick={() => setMode('bulk')}
               style={{ 
-                background: mode === 'bulk' ? '#1f1f1f' : 'transparent',
-                color: mode === 'bulk' ? 'var(--text-primary)' : 'var(--text-secondary)',
+                background: mode === 'bulk' ? '#000' : 'transparent',
+                color: mode === 'bulk' ? '#fff' : 'var(--text-secondary)',
                 border: '1px solid var(--surface-border)',
-                padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '500'
+                padding: '0.5rem 1.25rem', borderRadius: '10px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'
               }}
             >
               Bulk Scan
@@ -423,7 +412,7 @@ const App = () => {
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
                   <thead>
-                    <tr style={{ background: '#0a0a0a', color: 'var(--text-secondary)', borderBottom: '1px solid var(--surface-border)' }}>
+                    <tr style={{ background: '#fbfbfd', color: 'var(--text-secondary)', borderBottom: '1px solid var(--surface-border)' }}>
                       <th style={{ padding: '1rem', fontWeight: '500' }}>IP Address</th>
                       <th style={{ padding: '1rem', fontWeight: '500' }}>Status</th>
                       <th style={{ padding: '1rem', fontWeight: '500' }}>ISP</th>
