@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Globe, Shield, Activity, History, Server, MapPin, AlertTriangle, CheckCircle2, XCircle, Trash2 } from 'lucide-react';
+import { Search, Globe, Shield, Activity, History, Server, MapPin, AlertTriangle, CheckCircle2, XCircle, Trash2, Plus, Calendar, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Map from './components/Map';
 
@@ -16,6 +16,8 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
+  const [servers, setServers] = useState([]);
+  const [newServer, setNewServer] = useState({ name: '', team: '', entryDate: '', cancelDate: '' });
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('ip_history');
@@ -23,6 +25,9 @@ const App = () => {
     
     const savedAuth = localStorage.getItem('is_authenticated');
     if (savedAuth === 'true') setIsAuthenticated(true);
+
+    const savedServers = localStorage.getItem('sentinel_servers');
+    if (savedServers) setServers(JSON.parse(savedServers));
   }, []);
 
   const handleLogin = (e) => {
@@ -100,6 +105,22 @@ const App = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const addServer = (e) => {
+    e.preventDefault();
+    if (!newServer.name || !newServer.team) return;
+    const serverWithId = { ...newServer, id: Date.now().toString() };
+    const updatedServers = [serverWithId, ...servers];
+    setServers(updatedServers);
+    localStorage.setItem('sentinel_servers', JSON.stringify(updatedServers));
+    setNewServer({ name: '', team: '', entryDate: '', cancelDate: '' });
+  };
+
+  const deleteServer = (id) => {
+    const updatedServers = servers.filter(s => s.id !== id);
+    setServers(updatedServers);
+    localStorage.setItem('sentinel_servers', JSON.stringify(updatedServers));
   };
 
   if (!isAuthenticated) {
@@ -249,6 +270,17 @@ const App = () => {
               Matrix Scan
             </button>
             <button 
+              onClick={() => setMode('tools')}
+              style={{ 
+                background: mode === 'tools' ? 'rgba(0, 242, 255, 0.1)' : 'transparent',
+                color: mode === 'tools' ? 'var(--primary-color)' : 'var(--text-secondary)',
+                border: `1px solid ${mode === 'tools' ? 'var(--primary-color)' : 'var(--surface-border)'}`,
+                padding: '0.6rem 1.2rem', borderRadius: '4px', cursor: 'pointer', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px'
+              }}
+            >
+              Tools Manager
+            </button>
+            <button 
               onClick={() => setShowStats(!showStats)}
               style={{ 
                 background: showStats ? 'rgba(0, 255, 157, 0.1)' : 'transparent',
@@ -261,34 +293,146 @@ const App = () => {
             </button>
           </div>
           
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <div style={{ flex: 1, position: 'relative' }}>
-              <Search style={{ position: 'absolute', left: '1rem', top: mode === 'bulk' ? '1.5rem' : '50%', transform: mode === 'bulk' ? 'none' : 'translateY(-50%)', color: 'var(--text-secondary)' }} size={20} />
-              {mode === 'single' ? (
+          {mode !== 'tools' ? (
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <div style={{ flex: 1, position: 'relative' }}>
+                <Search style={{ position: 'absolute', left: '1rem', top: mode === 'bulk' ? '1.5rem' : '50%', transform: mode === 'bulk' ? 'none' : 'translateY(-50%)', color: 'var(--text-secondary)' }} size={20} />
+                {mode === 'single' ? (
+                  <input 
+                    type="text" 
+                    className="input-field" 
+                    placeholder="Enter IP Address (e.g., 8.8.8.8)" 
+                    style={{ paddingLeft: '3rem' }}
+                    value={ipInput}
+                    onChange={(e) => setIpInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && checkIp()}
+                  />
+                ) : (
+                  <textarea 
+                    className="input-field" 
+                    placeholder="Enter multiple IPs (one per line or separated by commas)" 
+                    style={{ paddingLeft: '3rem', minHeight: '100px', resize: 'vertical' }}
+                    value={ipInput}
+                    onChange={(e) => setIpInput(e.target.value)}
+                  />
+                )}
+              </div>
+              <button className="glow-button" onClick={() => checkIp()} disabled={loading} style={{ alignSelf: mode === 'bulk' ? 'flex-end' : 'stretch' }}>
+                {loading ? 'Processing...' : 'Analyze Now'}
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={addServer} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+              <div style={{ position: 'relative' }}>
+                <Server style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                 <input 
                   type="text" 
                   className="input-field" 
-                  placeholder="Enter IP Address (e.g., 8.8.8.8)" 
+                  placeholder="Server Name" 
                   style={{ paddingLeft: '3rem' }}
-                  value={ipInput}
-                  onChange={(e) => setIpInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && checkIp()}
+                  value={newServer.name}
+                  onChange={(e) => setNewServer({...newServer, name: e.target.value})}
+                  required
                 />
-              ) : (
-                <textarea 
+              </div>
+              <div style={{ position: 'relative' }}>
+                <Users style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                <input 
+                  type="text" 
                   className="input-field" 
-                  placeholder="Enter multiple IPs (one per line or separated by commas)" 
-                  style={{ paddingLeft: '3rem', minHeight: '100px', resize: 'vertical' }}
-                  value={ipInput}
-                  onChange={(e) => setIpInput(e.target.value)}
+                  placeholder="Team" 
+                  style={{ paddingLeft: '3rem' }}
+                  value={newServer.team}
+                  onChange={(e) => setNewServer({...newServer, team: e.target.value})}
+                  required
                 />
-              )}
-            </div>
-            <button className="glow-button" onClick={() => checkIp()} disabled={loading} style={{ alignSelf: mode === 'bulk' ? 'flex-end' : 'stretch' }}>
-              {loading ? 'Processing...' : 'Analyze Now'}
-            </button>
-          </div>
+              </div>
+              <div style={{ position: 'relative' }}>
+                <Calendar style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                <input 
+                  type="date" 
+                  className="input-field" 
+                  style={{ paddingLeft: '3rem' }}
+                  value={newServer.entryDate}
+                  onChange={(e) => setNewServer({...newServer, entryDate: e.target.value})}
+                />
+              </div>
+              <div style={{ position: 'relative' }}>
+                <Calendar style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
+                <input 
+                  type="date" 
+                  className="input-field" 
+                  placeholder="Cancellation Date"
+                  style={{ paddingLeft: '3rem' }}
+                  value={newServer.cancelDate}
+                  onChange={(e) => setNewServer({...newServer, cancelDate: e.target.value})}
+                />
+              </div>
+              <button type="submit" className="glow-button" style={{ gridColumn: '1 / -1' }}>
+                <Plus size={18} style={{ marginRight: '0.5rem' }} /> Add Server to Registry
+              </button>
+            </form>
+          )}
         </section>
+
+        {mode === 'tools' && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-card"
+            style={{ padding: '0', marginBottom: '4rem' }}
+          >
+            <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--surface-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '1rem', letterSpacing: '2px' }}>Server Infrastructure registry</h3>
+              <span className="badge badge-success" style={{ fontSize: '0.6rem' }}>{servers.length} Assets Registered</span>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.8rem' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(0,0,0,0.4)', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    <th style={{ padding: '1rem' }}>Server Name</th>
+                    <th style={{ padding: '1rem' }}>Team</th>
+                    <th style={{ padding: '1rem' }}>Entry Date</th>
+                    <th style={{ padding: '1rem' }}>Cancellation Date</th>
+                    <th style={{ padding: '1rem' }}>Status</th>
+                    <th style={{ padding: '1rem' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {servers.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', fontStyle: 'italic' }}>No servers registered in the matrix.</td>
+                    </tr>
+                  ) : (
+                    servers.map((server) => (
+                      <tr key={server.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', verticalAlign: 'middle' }}>
+                        <td style={{ padding: '1rem', fontWeight: '700', color: 'var(--primary-color)' }}>{server.name}</td>
+                        <td style={{ padding: '1rem' }}>
+                          <span className="badge" style={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)' }}>{server.team}</span>
+                        </td>
+                        <td style={{ padding: '1rem' }}>{server.entryDate || '-'}</td>
+                        <td style={{ padding: '1rem' }}>{server.cancelDate || '-'}</td>
+                        <td style={{ padding: '1rem' }}>
+                          <span className="badge badge-success">Active</span>
+                        </td>
+                        <td style={{ padding: '1rem' }}>
+                          <button 
+                            onClick={() => deleteServer(server.id)}
+                            style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer' }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--error-color)'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.2)'}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        )}
 
         {showStats && history.length > 0 && (
           <motion.section 
