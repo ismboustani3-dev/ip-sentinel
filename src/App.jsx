@@ -41,9 +41,23 @@ const App = () => {
   };
 
   const saveToHistory = (data) => {
-    const newHistory = [data, ...history.filter(h => h.query !== data.query)].slice(0, 50);
-    setHistory(newHistory);
-    localStorage.setItem('ip_history', JSON.stringify(newHistory));
+    setHistory(prev => {
+      const newHistory = [data, ...prev.filter(h => h.query !== data.query)].slice(0, 50);
+      localStorage.setItem('ip_history', JSON.stringify(newHistory));
+      return newHistory;
+    });
+  };
+
+  const saveMultipleToHistory = (dataArray) => {
+    setHistory(prev => {
+      let currentHistory = [...prev];
+      dataArray.forEach(data => {
+        currentHistory = [data, ...currentHistory.filter(h => h.query !== data.query)];
+      });
+      const finalHistory = currentHistory.slice(0, 50);
+      localStorage.setItem('ip_history', JSON.stringify(finalHistory));
+      return finalHistory;
+    });
   };
 
   const deleteFromHistory = (ip) => {
@@ -85,14 +99,21 @@ const App = () => {
 
         const fullResult = { ...data, reputation: reputationData, timestamp: new Date().toISOString() };
         allResults.push(fullResult);
-        saveToHistory(fullResult);
       }
 
       if (mode === 'bulk') {
         setBulkResults(allResults);
         setResults(null);
+        // Save all valid results to history at once
+        const validResults = allResults.filter(r => !r.error);
+        if (validResults.length > 0) {
+          saveMultipleToHistory(validResults);
+        }
       } else {
-        setResults(allResults[0]);
+        if (allResults[0] && !allResults[0].error) {
+          setResults(allResults[0]);
+          saveToHistory(allResults[0]);
+        }
       }
     } catch (err) {
       setError(err.message);
@@ -559,7 +580,7 @@ const getDistribution = (history, key) => {
   return Object.entries(counts)
     .map(([name, count]) => ({ name, percent: Math.round((count / total) * 100) }))
     .sort((a, b) => b.percent - a.percent)
-    .slice(0, 5);
+    .slice(0, 10);
 };
 
 export default App;
