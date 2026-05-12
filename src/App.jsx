@@ -125,31 +125,32 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <div className="bg-blobs">
-          <div className="blob blob-1"></div>
-          <div className="blob blob-2"></div>
-        </div>
+      <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', position: 'relative' }}>
+        <div className="ambient-glow glow-1"></div>
+        <div className="ambient-glow glow-2"></div>
         
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', damping: 20 }}
           className="glass-card" 
-          style={{ width: '100%', maxWidth: '380px', border: '1px solid var(--surface-border)' }}
+          style={{ width: '100%', maxWidth: '420px', border: '1px solid var(--surface-border)', background: 'rgba(13, 13, 13, 0.8)', backdropFilter: 'blur(20px)' }}
         >
-          <div style={{ marginBottom: '2.5rem', textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              <Shield size={24} color="var(--primary-color)" />
-              <h1 style={{ fontSize: '1.25rem', fontWeight: '700' }}>WMN3</h1>
-            </div>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Sign In</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Access the WMN3 Intelligence Platform.</p>
-            <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.2)', marginTop: '0.5rem' }}>developed By Ismail</p>
+          <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
+            <motion.div 
+              initial={{ rotate: -10 }}
+              animate={{ rotate: 0 }}
+              style={{ display: 'inline-flex', padding: '1rem', background: '#000', borderRadius: '16px', border: '1px solid var(--surface-border)', marginBottom: '1.5rem' }}
+            >
+              <Shield size={32} color="var(--primary-color)" />
+            </motion.div>
+            <h1 style={{ fontSize: '2rem', fontWeight: '800', letterSpacing: '-0.04em', marginBottom: '0.5rem' }}>WMN3</h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Developed By Ismail</p>
           </div>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div style={{ textAlign: 'left' }}>
-              <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Email or Username</label>
+              <label style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '0.6rem', display: 'block' }}>SYSTEM ACCESS KEY</label>
               <input 
                 type="text" 
                 className="input-field" 
@@ -159,7 +160,7 @@ const App = () => {
               />
             </div>
             <div style={{ textAlign: 'left' }}>
-              <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Password</label>
+              <label style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '0.6rem', display: 'block' }}>SECURITY CIPHER</label>
               <input 
                 type="password" 
                 className="input-field" 
@@ -169,10 +170,10 @@ const App = () => {
               />
             </div>
             
-            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.85rem' }}>{loginError}</p>}
+            {loginError && <p style={{ color: 'var(--error-color)', fontSize: '0.85rem', textAlign: 'center' }}>{loginError}</p>}
             
-            <button type="submit" className="glow-button" style={{ width: '100%' }}>
-              Continue
+            <button type="submit" className="glow-button" style={{ width: '100%', marginTop: '1rem' }}>
+              Authorize Entry
             </button>
           </form>
         </motion.div>
@@ -181,20 +182,30 @@ const App = () => {
   }
 
   return (
-    <div className="app-container">
-      <div className="bg-blobs">
-        <div className="blob blob-1"></div>
-        <div className="blob blob-2"></div>
-      </div>
-
-      <nav style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div className="glass-card" style={{ padding: '0.75rem', borderRadius: '12px' }}>
-            <Shield size={24} color="var(--primary-color)" />
+    <div className="app-container" style={{ position: 'relative' }}>
+      <div className="ambient-glow glow-1"></div>
+      <div className="ambient-glow glow-2"></div>
+      
+      <nav style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        padding: '1.5rem 2rem', 
+        borderBottom: '1px solid var(--surface-border)',
+        backdropFilter: 'blur(20px)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        background: 'rgba(3, 3, 3, 0.7)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ padding: '0.5rem', background: '#fff', borderRadius: '8px' }}>
+            <Shield size={20} color="#000" />
           </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: '700', letterSpacing: '-0.02em' }}>
-            WMN3
-          </h1>
+          <div>
+            <h1 style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.02em' }}>WMN3</h1>
+            <p style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: '600', textTransform: 'uppercase' }}>developed By Ismail</p>
+          </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <div className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

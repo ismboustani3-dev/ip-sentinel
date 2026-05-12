@@ -1,19 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --bg-color: #000000;
-  --surface-color: #0a0a0a;
-  --surface-border: #1f1f1f;
+  --bg-color: #030303;
+  --surface-color: #0d0d0d;
+  --surface-card: #141414;
+  --surface-border: rgba(255, 255, 255, 0.08);
   --primary-color: #ffffff;
-  --secondary-color: #6366f1; /* Indigo */
-  --accent-color: #a855f7; /* Purple */
+  --accent-color: #6366f1;
   --text-primary: #ffffff;
-  --text-secondary: #888888;
-  --success-color: #10b981;
-  --error-color: #ef4444;
-  --warning-color: #f59e0b;
-  --font-main: 'Geist', sans-serif;
-  --glass-blur: blur(10px);
+  --text-secondary: #a1a1a1;
+  --success-color: #00ff9d;
+  --error-color: #ff4d4d;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --radius: 12px;
 }
 
 * {
@@ -31,106 +30,119 @@ body {
   overflow-x: hidden;
 }
 
-/* Subtle Gradient Overlay */
-body::before {
+/* Texture Overlay */
+body::after {
   content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-              radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Ambient Glows */
+.ambient-glow {
+  position: fixed;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
   z-index: -1;
+  filter: blur(80px);
   pointer-events: none;
 }
 
+.glow-1 { top: -10vw; right: -10vw; }
+.glow-2 { bottom: -10vw; left: -10vw; background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%); }
+
 .glass-card {
-  background: var(--surface-color);
+  background: var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  transition: all 0.2s ease;
-  position: relative;
+  border-radius: var(--radius);
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .glass-card:hover {
-  border-color: #333;
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+.input-field {
+  background: #000;
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  color: white;
+  font-family: var(--font-main);
+  width: 100%;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #444;
+  background: #050505;
 }
 
 .glow-button {
   background: var(--primary-color);
   color: #000;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
   font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .glow-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
-.glow-button:disabled {
-  background: #333;
-  color: #666;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.input-field {
-  background: #000;
-  border: 1px solid var(--surface-border);
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  color: white;
-  font-family: var(--font-main);
+.glow-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
   width: 100%;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: #666;
-}
-
-h1, h2, h3, h4 {
-  font-weight: 600;
-  letter-spacing: -0.02em;
+.glow-button:hover::after {
+  left: 100%;
 }
 
 .badge {
-  padding: 0.25rem 0.6rem;
-  border-radius: 9999px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  border: 1px solid transparent;
-}
-
-.badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success-color); border-color: rgba(16, 185, 129, 0.2); }
-.badge-error { background: rgba(239, 68, 68, 0.1); color: var(--error-color); border-color: rgba(239, 68, 68, 0.2); }
-.badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); border-color: rgba(245, 158, 11, 0.2); }
-
-/* Map Styles */
-.leaflet-container {
-  background: #000 !important;
+  padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  margin-top: 1rem;
-  border: 1px solid var(--surface-border);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.map-tiles {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-}
+.badge-success { background: rgba(0, 255, 157, 0.08); color: var(--success-color); border: 1px solid rgba(0, 255, 157, 0.1); }
+.badge-error { background: rgba(255, 77, 77, 0.08); color: var(--error-color); border: 1px solid rgba(255, 77, 77, 0.1); }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -138,19 +150,17 @@ h1, h2, h3, h4 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #222;
+  background: #333;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333;
+  background: #444;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeIn 0.4s ease forwards;
+/* Map Styling */
+.leaflet-container {
+  border-radius: var(--radius);
+  border: 1px solid var(--surface-border);
+  filter: grayscale(1) invert(1) brightness(0.8) contrast(1.2);
 }
